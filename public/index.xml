@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes Universal Declarative Operator (KUDO) on KUDO</title>
+    <link>https://kudo.dev/</link>
+    <description>Recent content in Kubernetes Universal Declarative Operator (KUDO) on KUDO</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 05 Mar 2019 13:52:37 -0800</lastBuildDate>
+    
+	<atom:link href="https://kudo.dev/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Apache Kafka</title>
+      <link>https://kudo.dev/docs/examples/apache-kafka/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/examples/apache-kafka/</guid>
+      <description>Apache Kafka Dependencies Kafka depends on Zookeeper so we need to run it first. Follow the Zookeeper example to run a basic cluster.
+Run Kafka Create a Framework object for Kafka
+$ kubectl apply -f config/samples/kafka-framework.yaml framework.kudo.k8s.io &amp;quot;kafka&amp;quot; created  Create a FrameworkVersion for the Kafka Framework
+$ kubectl apply -f config/samples/kafka-frameworkversion.yaml frameworkversion.kudo.k8s.io &amp;quot;kafka-2.11-2.4.0&amp;quot; created  Create an Instance of Kafka
+$ kubectl apply -f config/samples/kafka-instance.yaml instance.kudo.k8s.io &amp;quot;kafka&amp;quot; created  When an instance is created, the default deploy plan is executed</description>
+    </item>
+    
+    <item>
+      <title>Apache Zookeeper</title>
+      <link>https://kudo.dev/docs/examples/apache-zookeeper/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/examples/apache-zookeeper/</guid>
+      <description>Apache Zookeeper Create a Framework object for Zookeeper
+$ kubectl apply -f config/samples/zookeeper-framework.yaml framework.kudo.k8s.io &amp;quot;zookeeper&amp;quot; created  Create a FrameworkVersion for the Zookeeper Framework
+$ kubectl apply -f config/samples/zookeeper-frameworkversion.yaml frameworkversion.kudo.k8s.io &amp;quot;zookeeper-1.0&amp;quot; created  Create an Instance of Zookeeper
+$ kubectl apply -f config/samples/zookeeper-instance.yaml instance.kudo.k8s.io &amp;quot;zk&amp;quot; created  When an instance is created, the default deploy plan is executed
+$ kubectl get planexecutions NAME AGE zk-deploy-392770000 11s  The statefulset defined in the FrameworkVersion comes up with 3 pods:</description>
+    </item>
+    
+    <item>
+      <title>CLI Usage</title>
+      <link>https://kudo.dev/docs/cli/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/cli/</guid>
+      <description>CLI Usage This document demonstrates how to use the CLI but also shows what happens in Kudo under the hood, which can be helpful when troubleshooting.
+There are two CLIs you can use at the moment:
+ Kudoctl Kubectl Kudo Plugin  Kudoctl The usage is intended to make your life easier when working with Kudo. A work flow would look like this:
+ You get a list of all available Instances deployed by Kudo You get the status the particular Instance of interest You see a history to a specific Instance  List Instances In order to inspect instances deployed by Kudo we need to get an overview of all instances running.</description>
+    </item>
+    
+    <item>
+      <title>Community</title>
+      <link>https://kudo.dev/docs/community/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/community/</guid>
+      <description> Community Discussion, Contribution, and Support Learn how to engage with the Kubernetes community on the community page.
+You can reach the maintainers of this project at:
+ Slack Mailing List  Code of Conduct Participation in the Kudo community is governed by the Kubernetes Code of Conduct.
+ OWNERS Creative Commons 4.0  </description>
+    </item>
+    
+    <item>
+      <title>Concepts</title>
+      <link>https://kudo.dev/docs/concepts/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/concepts/</guid>
+      <description>Concepts Framework High-level description of a deployable application. Contains metadata about the application (e.g., Apache Kafka).
+FrameworkVersion Specific version of a deployable application, including configuration and lifecycle hooks for deployments, upgrades, and rollbacks (e.g., Kafka version 2.4.0).
+Instance Resource created to manage an instance of specific FrameworkVersion. Instances are pets and have the same name throughout its entire lifecycle. (e.g., Kafka 2.4.0 cluster with 1 broker).
+PlanExecution Kudo-managed resource defining the inputs and status of an instance’s executable plans (e.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>https://kudo.dev/docs/getting-started/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/getting-started/</guid>
+      <description>Getting Started Pre-requisites Before you get started:
+ Install Go 1.11 or later Latest version of dep Kubernetes Cluster 1.12 or later (e.g. Minikube) Configure kubectl  Installation Instructions  Get KUDO repo: go get github.com/kudobuilder/kudo/ cd $GOPATH/src/github.com/kudobuilder/kudo make install to deploy universal CRDs make run to run the Operator with local go environment  Deploy your first Application Follow the instructions in the Apache Kafka example to deploy a Kafka cluster along with its dependency Zookeeper.</description>
+    </item>
+    
+    <item>
+      <title>MySQL with Backup</title>
+      <link>https://kudo.dev/docs/examples/backups/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/examples/backups/</guid>
+      <description>Backup Jobs KUDO has the ability to capture the backup and restoration process for database applications.
+Demo Watch the explained demo video of the steps beneath here.
+MySQL Create an instance of MySQL using the provided Framework
+$ kubectl apply -f config/samples/mysql.yaml framework.kudo.k8s.io/mysql created frameworkversion.kudo.k8s.io/mysql-57 created instance.kudo.k8s.io/mysql created  Query the database to show
+MYSQL_POD=`kubectl get pods -l app=mysql,step=deploy -o jsonpath=&amp;quot;{.items[*].metadata.name}&amp;quot;` kubectl exec -it $MYSQL_POD -- mysql -ppassword -e &amp;quot;show tables;&amp;quot; kudo  Add some data:</description>
+    </item>
+    
+  </channel>
+</rss>

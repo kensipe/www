@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docs on KUDO</title>
+    <link>https://kudo.dev/docs/</link>
+    <description>Recent content in Docs on KUDO</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://kudo.dev/docs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CLI Usage</title>
+      <link>https://kudo.dev/docs/cli/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/cli/</guid>
+      <description>CLI Usage This document demonstrates how to use the CLI but also shows what happens in Kudo under the hood, which can be helpful when troubleshooting.
+There are two CLIs you can use at the moment:
+ Kudoctl Kubectl Kudo Plugin  Kudoctl The usage is intended to make your life easier when working with Kudo. A work flow would look like this:
+ You get a list of all available Instances deployed by Kudo You get the status the particular Instance of interest You see a history to a specific Instance  List Instances In order to inspect instances deployed by Kudo we need to get an overview of all instances running.</description>
+    </item>
+    
+    <item>
+      <title>Community</title>
+      <link>https://kudo.dev/docs/community/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/community/</guid>
+      <description> Community Discussion, Contribution, and Support Learn how to engage with the Kubernetes community on the community page.
+You can reach the maintainers of this project at:
+ Slack Mailing List  Code of Conduct Participation in the Kudo community is governed by the Kubernetes Code of Conduct.
+ OWNERS Creative Commons 4.0  </description>
+    </item>
+    
+    <item>
+      <title>Concepts</title>
+      <link>https://kudo.dev/docs/concepts/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/concepts/</guid>
+      <description>Concepts Framework High-level description of a deployable application. Contains metadata about the application (e.g., Apache Kafka).
+FrameworkVersion Specific version of a deployable application, including configuration and lifecycle hooks for deployments, upgrades, and rollbacks (e.g., Kafka version 2.4.0).
+Instance Resource created to manage an instance of specific FrameworkVersion. Instances are pets and have the same name throughout its entire lifecycle. (e.g., Kafka 2.4.0 cluster with 1 broker).
+PlanExecution Kudo-managed resource defining the inputs and status of an instance’s executable plans (e.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>https://kudo.dev/docs/getting-started/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://kudo.dev/docs/getting-started/</guid>
+      <description>Getting Started Pre-requisites Before you get started:
+ Install Go 1.11 or later Latest version of dep Kubernetes Cluster 1.12 or later (e.g. Minikube) Configure kubectl  Installation Instructions  Get KUDO repo: go get github.com/kudobuilder/kudo/ cd $GOPATH/src/github.com/kudobuilder/kudo make install to deploy universal CRDs make run to run the Operator with local go environment  Deploy your first Application Follow the instructions in the Apache Kafka example to deploy a Kafka cluster along with its dependency Zookeeper.</description>
+    </item>
+    
+  </channel>
+</rss>

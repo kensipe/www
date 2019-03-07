@@ -1,0 +1,607 @@
+<!DOCTYPE html><html>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLI Usage | KUDO</title>
+
+<link href="https://fonts.googleapis.com/css?family=Oxygen|Oxygen+Mono:300,400,700" rel="stylesheet">
+<link rel="stylesheet" href="/normalize.min.css">
+
+<link rel="stylesheet" href="/book.min.29d743ffb6d61ecbfc9bb21b7eab17d63b577d4bd547c3f095addb1c793ab1b1.css">
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main class="flex container">
+
+    <aside class="book-menu fixed">
+      <nav role="navigation">
+<h2 class="book-brand">
+  <a href="https://kudo.dev/">KUDO</a>
+</h2>
+
+
+
+    
+
+
+  
+  
+    
+    
+  
+ 
+  <ul>
+    
+    <li><a href="/docs/examples/">
+    Examples</a> 
+  <ul>
+    
+
+    
+    <li>
+      <a href="/docs/examples/apache-kafka/">Apache Kafka</a>
+    </li>
+    
+    <li>
+      <a href="/docs/examples/apache-zookeeper/">Apache Zookeeper</a>
+    </li>
+    
+    <li>
+      <a href="/docs/examples/backups/">MySQL with Backup</a>
+    </li>
+    
+  </ul>
+
+    </li>
+    
+
+    
+    <li>
+      <a href="/docs/cli/" class="active">CLI Usage</a>
+    </li>
+    
+    <li>
+      <a href="/docs/community/">Community</a>
+    </li>
+    
+    <li>
+      <a href="/docs/concepts/">Concepts</a>
+    </li>
+    
+    <li>
+      <a href="/docs/getting-started/">Getting Started</a>
+    </li>
+    
+  </ul>
+
+
+
+
+
+
+
+
+</nav>
+    </aside>
+
+    <div class="book-page">
+      <header class="align-center justify-between book-header">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" />
+  </label>
+  <strong>CLI Usage</strong>
+</header>
+
+      
+<article class="markdown">
+
+<h1 id="cli-usage">CLI Usage</h1>
+
+<p>This document demonstrates how to use the CLI but also shows what happens in <code>Kudo</code> under the hood, which can be helpful when troubleshooting.</p>
+
+<p>There are two CLIs you can use at the moment:</p>
+
+<ul>
+<li>Kudoctl</li>
+<li>Kubectl Kudo Plugin</li>
+</ul>
+
+<h2 id="kudoctl">Kudoctl</h2>
+
+<p>The usage is intended to make your life easier when working with <code>Kudo</code>. A work flow would look like this:</p>
+
+<ol>
+<li>You get a list of all available Instances deployed by <code>Kudo</code></li>
+<li>You get the status the particular Instance of interest</li>
+<li>You see a history to a specific Instance</li>
+</ol>
+
+<h1 id="list-instances">List Instances</h1>
+
+<p>In order to inspect instances deployed by <code>Kudo</code> we need to get an overview of all instances running.
+Therefor we use the <code>list</code> command which has subcommands to show all available instances:</p>
+
+<p><code>kudoctl list instances --namespace=&lt;default&gt; --kubeconfig=&lt;$HOME/.kube/config&gt;</code></p>
+
+<p>Example:</p>
+
+<pre><code class="language-bash">$ kudoctl list instances
+  List of current instances in namespace &quot;default&quot;:
+  .
+  ├── small
+  ├── up
+  └── zk
+</code></pre>
+
+<p>This maps to the <code>kubectl</code> command:</p>
+
+<p><code>kubectl get instances</code></p>
+
+<p>Example:</p>
+
+<pre><code class="language-bash">$ kubectl get instances
+  NAME      CREATED AT
+  small     4d
+  up        3d
+  zk        4d
+</code></pre>
+
+<h1 id="get-the-status-of-an-instance">Get the Status of an Instance</h1>
+
+<p>(Or how to look up your instance status)</p>
+
+<p>Now that we know the available instances we can get the current status of all plans to an particular instance. The command for this is:</p>
+
+<p><code>kudoctl plan status --instance=&lt;instanceName&gt; --kubeconfig=&lt;$HOME/.kube/config&gt;</code></p>
+
+<p>*Note: The <code>--instance</code> flag is mandatory and <strong>not optional</strong>.*</p>
+
+<pre><code class="language-bash">$ kudoctl plan status --instance=up
+  Plan(s) for &quot;up&quot; in namespace &quot;default&quot;:
+  .
+  └── up (Framework-Version: &quot;upgrade-v1&quot; Active-Plan: &quot;up-deploy-493146000&quot;)
+      ├── Plan deploy (serial strategy) [COMPLETE]
+      │   └── Phase par (serial strategy) [COMPLETE]
+      │       └── Step run-step (COMPLETE)
+      ├── Plan update (serial strategy) [NOT ACTIVE]
+      │   └── Phase par (serial strategy) [NOT ACTIVE]
+      │       └── Step par (serial strategy) [NOT ACTIVE]
+      │           └── run-step [NOT ACTIVE]
+      └── Plan upgrade (serial strategy) [NOT ACTIVE]
+          └── Phase par (serial strategy) [NOT ACTIVE]
+              └── Step par (serial strategy) [NOT ACTIVE]
+                  └── run-step [NOT ACTIVE]
+</code></pre>
+
+<p>In this tree chart we see all important information in one screen:</p>
+
+<ul>
+<li><code>up</code> is the current instance we are looking at.</li>
+<li><code>default</code> is the current namespace we are in.</li>
+<li><code>upgrade-v1</code> is the current <strong>Framework-Version</strong>.</li>
+<li><code>up-deploy-493146000</code> is the current <strong>Active-Plan</strong>.
+
+<ul>
+<li><code>par</code> is a serial phase within the <code>deploy</code> plan that has been <code>COMPLETE</code></li>
+<li><code>deploy</code> is a <code>serial</code> plan that has been <code>COMPLETE</code>.</li>
+<li><code>run-step</code> is a <code>serial</code> step that has been <code>COMPLETE</code>.</li>
+</ul></li>
+<li><code>update</code> is another <code>serial</code> plan that is currently <code>NOT ACTIVE</code>.
+
+<ul>
+<li><code>par</code> is a serial phase within the <code>update</code> plan that has been <code>NOT ACTIVE</code></li>
+<li><code>par</code> is a <code>serial</code> collection of steps that has been <code>NOT ACTIVE</code>.</li>
+<li><code>run-step</code> is a <code>serial</code> step within the <code>par</code> step collection that has been <code>NOT ACTIVE</code>.</li>
+</ul></li>
+<li><code>upgrade</code> is another <code>serial</code> plan that is currently <code>NOT ACTIVE</code>.
+
+<ul>
+<li><code>par</code> is a serial phase within the <code>upgrade</code> plan that has been <code>NOT ACTIVE</code></li>
+<li><code>par</code> is a <code>serial</code> collection of steps that has been <code>NOT ACTIVE</code>.</li>
+<li><code>run-step</code> is a <code>serial</code> step within the <code>par</code> step collection that has been <code>NOT ACTIVE</code>.
+<br /></li>
+</ul></li>
+</ul>
+
+<p>This would translate to the following manual <code>kubectl</code> commands:</p>
+
+<ul>
+<li><code>kubectl get instances</code> (to get the matching <code>FrameworkVersion</code>)</li>
+<li><code>kubectl describe frameworkversion upgrade-v1</code> (to get the current <code>PlanExecution</code>)</li>
+<li><code>kubectl describe planexecution up-deploy-493146000</code> (to get the status of the <code>Active-Plan</code>)</li>
+</ul>
+
+<p>The overall overview of all available plans can be found in <code>Spec.Plans</code> of the matching <code>FrameworkVersion</code>.</p>
+
+<pre><code class="language-bash">$ kubectl describe frameworkversion upgrade-v1
+Name:         upgrade-v1
+Namespace:    default
+Labels:       controller-tools.k8s.io=1.0
+Annotations:  kubectl.kubernetes.io/last-applied-configuration={&quot;apiVersion&quot;:&quot;kudo.k8s.io/v1alpha1&quot;,&quot;kind&quot;:&quot;FrameworkVersion&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;labels&quot;:{&quot;controller-tools.k8s.io&quot;:&quot;1.0&quot;},&quot;name&quot;:&quot;upgra...
+API Version:  kudo.k8s.io/v1alpha1
+Kind:         FrameworkVersion
+Metadata:
+  Cluster Name:        
+  Creation Timestamp:  2018-12-14T19:26:44Z
+  Generation:          1
+  Resource Version:    63769
+  Self Link:           /apis/kudo.k8s.io/v1alpha1/namespaces/default/frameworkversions/upgrade-v1
+  UID:                 30fe6209-ffd6-11e8-abd5-080027d506c7
+Spec:
+  Connection String:  
+  Framework:
+    Kind:  Framework
+    Name:  upgrade
+  Parameters:
+    Default:       15
+    Description:   how long to have the container sleep for before returning
+    Display Name:  Sleep Time
+    Name:          SLEEP
+    Required:      false
+  Plans:
+    Deploy:
+      Phases:
+        Name:  par
+        Steps:
+          Name:  run-step
+          Tasks:
+            run
+        Strategy:  serial
+      Strategy:    serial
+    Update:
+      Phases:
+        Name:  par
+        Steps:
+          Name:  run-step
+          Tasks:
+            run
+        Strategy:  serial
+      Strategy:    serial
+    Upgrade:
+      Phases:
+        Name:  par
+        Steps:
+          Name:  run-step
+          Tasks:
+            run
+        Strategy:  serial
+      Strategy:    serial
+  Tasks:
+    Run:
+      Resources:
+        job.yaml
+  Templates:
+    Job . Yaml:  apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: default
+  name: {{PLAN_NAME}}-job
+spec:
+  template:
+    metadata:
+      name: {{PLAN_NAME}}-job
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: bb
+        image: busybox:latest
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        - &quot;echo {{PLAN_NAME}} for v1 &amp;&amp; echo Going to sleep for {{SLEEP}} seconds &amp;&amp; sleep {{SLEEP}}&quot;
+
+  Version:  1.0.0
+Events:     &lt;none&gt;
+</code></pre>
+
+<p>When looking at the particular <code>PlanExecution</code> we are able to see the status of the current applied plan.</p>
+
+<pre><code class="language-bash">$ kubectl describe planexecution up-deploy-493146000
+  Name:         up-deploy-493146000
+  Namespace:    default
+  Labels:       framework-version=upgrade-v1
+                instance=up
+  Annotations:  &lt;none&gt;
+  API Version:  kudo.k8s.io/v1alpha1
+  Kind:         PlanExecution
+  Metadata:
+    Cluster Name:        
+    Creation Timestamp:  2018-12-14T19:26:44Z
+    Generation:          1
+    Owner References:
+      API Version:           kudo.k8s.io/v1alpha1
+      Block Owner Deletion:  true
+      Controller:            true
+      Kind:                  Instance
+      Name:                  up
+      UID:                   3101bbe5-ffd6-11e8-abd5-080027d506c7
+    Resource Version:        63815
+    Self Link:               /apis/kudo.k8s.io/v1alpha1/namespaces/default/planexecutions/up-deploy-493146000
+    UID:                     31037dd0-ffd6-11e8-abd5-080027d506c7
+  Spec:
+    Instance:
+      Kind:       Instance
+      Name:       up
+      Namespace:  default
+    Plan Name:    deploy
+  Status:
+    Name:  deploy
+    Phases:
+      Name:   par
+      State:  COMPLETE
+      Steps:
+        Name:    run-step
+        State:   COMPLETE
+      Strategy:  serial
+    State:       COMPLETE
+    Strategy:    serial
+  Events:        &lt;none&gt;
+</code></pre>
+
+<p>The status information for the <code>Active-Plan</code> is nested in this part:</p>
+
+<pre><code class="language-bash">  Status:
+    Name:  deploy
+    Phases:
+      Name:   par
+      State:  COMPLETE
+      Steps:
+        Name:    run-step
+        State:   COMPLETE
+      Strategy:  serial
+    State:       COMPLETE
+    Strategy:    serial
+</code></pre>
+
+<p>Our tree view makes this information more readable to the user and creates a better user experience through one command rather than picking from multiple responses the bits and pieces.</p>
+
+<h1 id="get-the-history-to-planexecutions">Get the History to PlanExecutions</h1>
+
+<p>This is helpful if you want to find out which plan ran on your instance to a particular <code>FrameworkVersion</code>.
+Let&rsquo;s say you want to know all plans that ran for the instance <code>up</code> and its FrameworkVersion <code>upgrade-v1</code>:</p>
+
+<pre><code class="language-bash">$ kudoctl plan history upgrade-v1 --instance=up
+  History of plan-executions for &quot;up&quot; in namespace &quot;default&quot; to framework-version &quot;upgrade-v1&quot;:
+  .
+  └── up-deploy-493146000 (created 4h56m12s ago)
+</code></pre>
+
+<p>If you want to have a broader history to all plans applied to an instance:</p>
+
+<pre><code class="language-bash">$ kudoctl plan history --instance=up
+  History of all plan-executions for &quot;up&quot; in namespace &quot;default&quot;:
+  .
+  └── up-deploy-493146000 (created 4h52m34s ago)
+</code></pre>
+
+<p>This includes the previous history but also all FrameworkVersions that have been applied to the selected instance.</p>
+
+<h2 id="kubectl-kudo-plugin">Kubectl kudo Plugin</h2>
+
+<h3 id="dependencies">Dependencies</h3>
+
+<p>The Kubectl Plugin currently expects <code>jq</code> to be installed on the system.</p>
+
+<h3 id="install">Install</h3>
+
+<p>Install the plugin to your <code>PATH</code> e.g. in the kudo repo root via:</p>
+
+<ul>
+<li><code>ln -s $GOPATH/src/github.com/kudobuilder/kudo/cmd/kubectl-plugin/kubectl-kudo /usr/local/bin/kubectl-kudo</code></li>
+</ul>
+
+<h3 id="commands">Commands</h3>
+
+<table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>kubectl kudo create &lt;framework&gt; -n &lt;instanceName&gt; -v &lt;versionNumber&gt; -p PARAM1=&quot;\VALUE\&quot; -p PARAM2=Value</code></td>
+<td>Creates an instance of an installed framework</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo delete &lt;instanceName&gt;</code></td>
+<td>Deletes a specified instance</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo exec &lt;frameworkName&gt;  &lt;cmd&gt;</code></td>
+<td>Executes a command for a particular framework - right now just Flink supported</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo flink  &lt;cmd&gt;</code></td>
+<td>Wrapper arround <code>Flink CLI</code> that supports all <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/ops/cli.html">https://ci.apache.org/projects/flink/flink-docs-release-1.7/ops/cli.html</a> commands</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo install something</code></td>
+<td>Lists all available frameworks from the <code>kudo App Store</code> that can be installed</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo install &lt;frameworkName&gt;</code></td>
+<td>Installs a framework from the <code>kudo App Store</code> with dependencies</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo uninstall &lt;frameworkName&gt; --all-dependencies</code></td>
+<td>Uninstalls a framework/frameworkversion with all dependencies</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo uninstall &lt;frameworkName&gt;</code></td>
+<td>Uninstalls just the specified framework/frameworkversion</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo scale &lt;instanceName&gt; --replicas=&lt;number&gt;</code></td>
+<td>Scales an instance deployment/statefulset</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo shell</code></td>
+<td>Lists all available frameworks of which you could get a shell</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo shell &lt;frameworkName&gt;</code></td>
+<td>Gives you a shell - right now just Flink supported</td>
+</tr>
+
+<tr>
+<td><code>kubectl kudo start -n &lt;instanceName&gt; -v &lt;version&gt; -p &lt;planName&gt;</code></td>
+<td>Starts a specified plan of your instance</td>
+</tr>
+</tbody>
+</table>
+
+<p>Run <code>kubectl kudo install something</code> and you see a list of available frameworks:</p>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo install something
+Stable version of something not found. 
+Looking up incubating versions...
+	Framework something not found in registry.
+
+Available stable frameworks to install:
+	kafka
+	zookeeper
+Available incubating frameworks to install:
+	flink
+</code></pre>
+
+<h3 id="creating-example">Creating Example</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo create kafka -n kafka -v 2.11-2.4.0 -p KAFKA_ZOOKEEPER_URI:zk-zk-0.zk-hs:2181,zk-zk-1.zk-hs:2181,zk-zk-2.zk-hs:2181 -p KAFKA_ZOOKEEPER_PATH:\&quot;/small\&quot; -p BROKERS_COUNT:\&quot;3\&quot;
+instance.kudo.k8s.io/kafka created
+</code></pre>
+
+<h3 id="delete-example">Delete Example</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo delete kafka
+instance.kudo.k8s.io &quot;kafka&quot; deleted
+</code></pre>
+
+<h3 id="install-framework">Install framework</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo install kafka
+Checking for kafka dependencies...
+Error from server (NotFound): frameworks.kudo.k8s.io &quot;zookeeper&quot; not found
+No dependency frameworks are installed.
+Looking up stable version of zookeeper
+	Found 1 stable version
+Found latest stable version 0
+Installing zookeeper framework...
+framework.kudo.k8s.io/zookeeper created
+frameworkversion.kudo.k8s.io/zookeeper-1.0 created
+stable framework zookeeper successfully installed.
+Looking up stable version of kafka
+	Found 1 stable version
+Found latest stable version 0
+Installing kafka framework...
+framework.kudo.k8s.io/kafka created
+frameworkversion.kudo.k8s.io/kafka-2.11-2.4.0 created
+stable framework kafka successfully installed.
+</code></pre>
+
+<h3 id="uninstall-without-dependencies-default">Uninstall without dependencies (default)</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo uninstall kafka
+kafka framework is installed.
+Uninstalling kafka...
+Looking up stable version of kafka
+	Found 1 stable version
+Found latest stable version 0
+Uninstalling kafka framework...
+framework.kudo.k8s.io &quot;kafka&quot; deleted
+frameworkversion.kudo.k8s.io &quot;kafka-2.11-2.4.0&quot; deleted
+stable framework kafka successfully uninstalled.
+</code></pre>
+
+<h3 id="uninstall-with-dependencies">Uninstall with dependencies</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo uninstall kafka --all-dependencies
+kafka framework is installed.
+Checking for kafka dependencies...
+Found installed dependency framework(s):
+	zookeeper
+Looking up stable version of zookeeper
+	Found 1 stable version
+Found latest stable version 0
+Uninstalling zookeeper framework...
+framework.kudo.k8s.io &quot;zookeeper&quot; deleted
+frameworkversion.kudo.k8s.io &quot;zookeeper-1.0&quot; deleted
+stable framework zookeeper successfully uninstalled.
+All dependency frameworks are uninstalled now.
+Looking up stable version of kafka
+	Found 1 stable version
+Found latest stable version 0
+Uninstalling kafka framework...
+framework.kudo.k8s.io &quot;kafka&quot; deleted
+frameworkversion.kudo.k8s.io &quot;kafka-2.11-2.4.0&quot; deleted
+stable framework kafka successfully uninstalled.
+</code></pre>
+
+<h3 id="scaling-example">Scaling Example</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo scale kafka-kafka --replicas=4
+Error from server (NotFound): deployments.extensions &quot;kafka-kafka&quot; not found
+statefulset.apps/kafka-kafka scaled
+</code></pre>
+
+<h3 id="start-plan-example">Start Plan Example</h3>
+
+<pre><code class="language-bash">kudo-demo $ kubectl kudo start -n demo -v flink-financial-demo -p upload
+planexecution.kudo.k8s.io/demo unchanged
+</code></pre>
+</article>
+
+      
+<div class="align-center book-git-footer justify-between">
+  
+  <div>
+    <a href="https://github.com/kudobuilder/www/commit/0e2427c6c494a4b33b37fa9be2a30385c09bdc3c" title='Last modified March 5, 2019 13:52 PST by Tobi Knaup' target="_blank" rel="noopener">
+      <img src="/svg/code-merge.svg" /> Last Modified Mar 5, 2019
+    </a>
+  </div>
+  
+  
+  <div>
+    <a href="https://github.com/kudobuilder/www/edit/master/content/docs/cli.md" target="_blank" rel="noopener">
+      <img src="/svg/code-fork.svg" /> Edit this page
+    </a>
+  </div>
+  
+</div>
+
+
+    </div>
+
+    
+  
+  
+
+
+  </main>
+
+  
+  
+</body>
+
+</html>
