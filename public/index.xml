@@ -54,10 +54,9 @@ There are two CLIs you can use at the moment:
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://kudo.dev/docs/community/</guid>
-      <description> Community Discussion, Contribution, and Support Learn how to engage with the Kubernetes community on the community page.
-You can reach the maintainers of this project at:
- Slack Mailing List  Code of Conduct Participation in the Kudo community is governed by the Kubernetes Code of Conduct.
- OWNERS Creative Commons 4.0  </description>
+      <description>Community Online Community Meetings KUDO community meetings take place every Thursday. We may vary the time of day to cater to people in different time zones. We use Zoom and every meeting is recorded for those unable to join live.
+You can find the agenda, Zoom link, and past recordings in this Google doc.
+Discussion, Contribution, and Support Learn how to engage with the Kubernetes community on the community page.</description>
     </item>
     
     <item>
